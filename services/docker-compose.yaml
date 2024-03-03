@@ -12,6 +12,7 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - ./../out/logs/bot/:/app/logs/
+    platform: linux/x86_64
 
   database:
     build: database/

@@ -25,7 +25,7 @@ def make_product(url: str, no_parse=False) -> model.Product:
         return model.Product(url=url, title="</>", vendor="</>")
 
     try:
-        service = Service(ChromeDriverManager().install())
+        service = Service(ChromeDriverManager().install()) 
         options = Options()
         options.headless = True
         options.add_argument('--no-sandbox')

@@ -22,15 +22,14 @@ def insert_entry(entry: model.Entry, logger: logging.Logger):
             password=os.environ['POSTGRES_PASSWORD'],
             database=os.environ['POSTGRES_DB'],
         ) as connection:
-            cursor = connection.cursor()
+            with connection.cursor() as cursor:
+                sql_request = (
+                    f"INSERT INTO products (url, title, vendor, user_telegram_id) "
+                    f"VALUES ('{entry.product.url}', '{entry.product.title}', '{entry.product.vendor}', '{entry.user.telegramID}')"
+                )
 
-            sql_request = (
-                f"INSERT INTO products (url, title, vendor, user_telegram_id) "
-                f"VALUES ('{entry.product.url}', '{entry.product.title}', '{entry.product.vendor}', '{entry.user.telegramID}')"
-            )
-
-            logger.info(f"quering sql: {sql_request}")
-            cursor.execute(sql_request)
+                logger.info(f"quering sql: {sql_request}")
+                cursor.execute(sql_request)
     except UniqueViolation:
         raise AlreadyExistsException()
     
@@ -43,36 +42,35 @@ def list_entries(logger: logging.Logger) -> list[model.Entry]:
         password=os.environ['POSTGRES_PASSWORD'],
         database=os.environ['POSTGRES_DB'],
     ) as connection:
-        cursor = connection.cursor()
+        with connection.cursor() as cursor:
 
-        sql_request = (
-            f"SELECT url, title, vendor, user_telegram_id FROM products"
-        )
-
-
-        logger.info(f"quering sql: {sql_request}")
-        cursor.execute(sql_request)
-
-        entry_list: list[model.Entry] = []
-
-        rows = cursor.fetchall()
-        logger.info(f"sql response: {rows}")
-
-        for row in rows:
-            entry = model.Entry(
-                product=model.Product(
-                    url=row[0],
-                    title=row[1],
-                    vendor=row[2],
-                ),
-                user=model.User(
-                    telegramID=row[3],
-                ),
+            sql_request = (
+                f"SELECT url, title, vendor, user_telegram_id FROM products"
             )
 
-            entry_list.append(entry)
+            logger.info(f"quering sql: {sql_request}")
+            cursor.execute(sql_request)
 
-        return entry_list 
+            entry_list: list[model.Entry] = []
+
+            rows = cursor.fetchall()
+            logger.info(f"sql response: {rows}")
+
+            for row in rows:
+                entry = model.Entry(
+                    product=model.Product(
+                        url=row[0],
+                        title=row[1],
+                        vendor=row[2],
+                    ),
+                    user=model.User(
+                        telegramID=row[3],
+                    ),
+                )
+
+                entry_list.append(entry)
+
+            return entry_list 
 
 
 def delete_entry(entry: model.Entry, logger: logging.Logger):
@@ -84,15 +82,14 @@ def delete_entry(entry: model.Entry, logger: logging.Logger):
         password=os.environ['POSTGRES_PASSWORD'],
         database=os.environ['POSTGRES_DB'],
     ) as connection:
-        cursor = connection.cursor()
+        with connection.cursor() as cursor:
+            sql_request = (
+                f"DELETE FROM products "
+                f"WHERE url='{entry.product.url}' AND user_telegram_id='{entry.user.telegramID}'"
+            )
 
-        sql_request = (
-            f"DELETE FROM products "
-            f"WHERE url='{entry.product.url}' AND user_telegram_id='{entry.user.telegramID}'"
-        )
+            logger.info(f"quering sql: {sql_request}")
+            cursor.execute(sql_request)
 
-        logger.info(f"quering sql: {sql_request}")
-        cursor.execute(sql_request)
-
-        if cursor.rowcount == 0:
-            raise NotFoundException()
+            if cursor.rowcount == 0:
+                raise NotFoundException()

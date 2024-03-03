@@ -1,0 +1,11 @@
+[run]
+omit = 
+    ./main.py
+    *__init__.py
+    *unit_test.py
+    ./provider/database/unit_test.py
+    ./provider/platform/unit_test.py
+    ./tools/mock.py
+
+[html]
+directory = ../../../out/htmlcov

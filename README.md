@@ -9,3 +9,6 @@ after cloning need do this steps
 ```
 psql postgres://username:secret@localhost:5432/database
 ```
+
+in bot/src:
+`python3.10 -m pytest --cov=./`

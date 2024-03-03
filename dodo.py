@@ -1,6 +1,7 @@
 from doit.tools import Interactive
 
 from tools.doit import impl
+from tools.doit import params
 
 
 def task_start_project():
@@ -8,8 +9,8 @@ def task_start_project():
         'basename': 'start-project',
         'doc': 'Start all project containers',
         'actions': [
-            Interactive(impl.start_project)
-        ]
+            Interactive(impl.start_project),
+        ],
     }
 
 
@@ -18,8 +19,8 @@ def task_stop_project():
         'basename': 'stop-project',
         'doc': 'Stop all project containers',
         'actions': [
-            Interactive(impl.stop_project)
-        ]
+            Interactive(impl.stop_project),
+        ],
     }
 
 
@@ -30,6 +31,19 @@ def task_restart_project():
         'actions': [
             Interactive(impl.stop_project),
             Interactive(impl.start_project),
+        ],
+    }
+
+
+def task_run_ut():
+    return {
+        'basename': 'run-ut',
+        'doc': 'Run project unit-tests',
+        'actions': [
+            Interactive(impl.run_ut),
+        ],
+        'params': [
+            params.param_html_cov(),
         ]
     }
 
@@ -39,8 +53,8 @@ def task_docker_compose_logs():
         'basename': 'docker-compose-logs',
         'doc': 'Show docker-compose logs in terminal',
         'actions': [
-            Interactive(impl.docker_compose_logs)
-        ]
+            Interactive(impl.docker_compose_logs),
+        ],
     }
 
 
@@ -49,6 +63,6 @@ def task_cleanup():
         'basename': 'cleanup',
         'doc': 'Remove all temporary files',
         'actions': [
-            Interactive(impl.cleanup)
-        ]
+            Interactive(impl.cleanup),
+        ],
     }
