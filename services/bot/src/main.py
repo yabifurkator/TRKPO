@@ -10,6 +10,7 @@ from controller.add import add_controller
 from controller.list import list_controller
 from controller.delete import delete_controller
 from controller.getprices import getprices_controller
+from provider.web import wildberries
 
 
 BANNER = """
@@ -64,7 +65,7 @@ def delete_endpoint(message: types.Message):
 
 @endpoint(bot=bot, command='getprices', logger=logger)
 def getprices_endpoint(message: types.Message):
-    getprices_controller(bot=bot, message=message, logger=logger)
+    getprices_controller(bot=bot, message=message, logger=logger, wildberries_get_price=wildberries.get_price)
 
 
 @bot.message_handler(content_types='text')

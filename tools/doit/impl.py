@@ -32,7 +32,7 @@ def stop_project() -> str:
 
     #stop project
     commands += f'cd {services_path} && '
-    commands += f'docker-compose down'
+    commands += f'docker-compose down --timeout 1'
 
     return commands
 
@@ -49,11 +49,35 @@ def run_ut(html_cov: bool) -> str:
     return commands
 
 
+def run_it(show_output: bool) -> str:
+    commands = ''
+
+    commands += f'cd {services_path} && '
+    commands += f'docker-compose --env-file {project_root}/.env down --timeout 1 && '
+    commands += f'cd {services_path}/tests/integration && '
+    if show_output:
+        commands += f'python3.10 -m pytest -s ./ && '
+    else:
+        commands += f'python3.10 -m pytest ./ && '
+    commands += f'docker compose --env-file {project_root}/.env down --timeout 1'
+
+    return commands
+
+
 def docker_compose_logs() -> str:
     commands = ''
 
     commands += f'cd {services_path} && '
     commands += f'docker-compose logs'
+
+    return commands
+
+
+def make_env() -> str:
+    commands = ''
+
+    commands += f'cd {project_root} && '
+    commands += f'cp .env.example .env'
 
     return commands
 

@@ -9,3 +9,8 @@ CREATE TABLE IF NOT EXISTS products (
 
     UNIQUE(url, user_telegram_id)
 );
+
+CREATE USER testuser WITH PASSWORD 'testpassword';
+GRANT ALL PRIVILEGES ON DATABASE "database" to testuser;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO testuser;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO testuser;

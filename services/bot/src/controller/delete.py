@@ -1,5 +1,6 @@
 import logging
 
+import psycopg2
 from telebot import TeleBot
 from telebot import types
 
@@ -35,11 +36,17 @@ def delete_controller_callback(user_reply: types.Message, bot: TeleBot, logger: 
         entry = postgresql.make_entry(product=product, user=user)
 
         postgresql.delete_entry(entry=entry, logger=logger)
-        bot.reply_to(message=user_reply, text="successfully deleted product from database")
+        bot.send_message(chat_id=user_reply.chat.id, text="successfully deleted product from database")
 
     except NotFoundException as ex:
         reply = f"failed to delete product: {ex}" 
         logger.error(reply)
         bot.reply_to(message=user_reply, text=reply)
 
-
+    except psycopg2.OperationalError as ex:
+        logger.exception(f"failed to delete product: database error: {ex}")
+        bot.reply_to(message=user_reply, text=f"failed to delete product: database error")
+    
+    except Exception as ex:
+        logger.exception(f"failed to delete product\nunknown exception: {ex}\nwith type: {type(ex)}")
+        bot.reply_to(message=user_reply, text=f"failed to delete product: unknown exception: {ex}")

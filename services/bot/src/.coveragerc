@@ -6,6 +6,9 @@ omit =
     ./provider/database/unit_test.py
     ./provider/platform/unit_test.py
     ./tools/mock.py
+    ./http_server.py
+    ./controller/getprices_mock.py
+    ./controller/add_mock.py
 
 [html]
 directory = ../../../out/htmlcov

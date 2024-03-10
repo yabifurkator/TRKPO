@@ -1,0 +1,23 @@
+name: CI
+on: [ push, pull_request ]
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run Unit Tests
+        run: doit run-ut
+
+  integration-tests:
+    name: Integration Tests
+    needs: [ unit-tests ]
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Create .env file
+        run: doit make-env
+      - name: Run Integration Tests
+        run: doit run-it

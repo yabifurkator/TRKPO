@@ -8,7 +8,7 @@ def init_logger(name: str, loglevel, log_dir: str) -> logging.Logger:
 
     log_path = os.path.join(
         log_dir,
-        f"bot.{time.strftime('%Y-%m-%d_%H-%M-%S', time.localtime())}.log",
+        f"{name}.{time.strftime('%Y-%m-%d_%H-%M-%S', time.localtime())}.log",
     )
 
     logger_file_handler = logging.FileHandler(

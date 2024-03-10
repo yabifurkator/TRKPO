@@ -7,3 +7,12 @@ def param_html_cov() -> dict:
         "default": False,
         "help": "Make UT result in HTML-report",
     }
+
+def param_show_output() -> dict:
+    return {
+        "name": "show_output",
+        "long": "show-output",
+        "type": bool,
+        "default": False,
+        "help": "Show IT output in console",
+    }

@@ -3,6 +3,7 @@ import unittest
 from unittest import mock
 
 from model import model
+from provider.web import wildberries
 from tools.mock import LoggerMock
 from .add import add_controller, add_controller_callback
 from .delete import delete_controller, delete_controller_callback
@@ -35,6 +36,7 @@ class TestController(unittest.TestCase):
             callback=add_controller_callback,
             bot=bot_mock,
             logger=logger_mock,
+            wildberries_make_product=wildberries.make_product,
         )
 
     @mock.patch('provider.web.wildberries.get_price')
@@ -86,11 +88,17 @@ class TestController(unittest.TestCase):
 
         bot_mock = mock.MagicMock(name='bot_mock')
         message_mock = mock.MagicMock(name='message_mock')
+        message_mock.chat.return_value.id.return_value = mock.MagicMock(name='chat_id')
 
-        _ = getprices_controller(bot=bot_mock, message=message_mock, logger=mock.MagicMock())
-
-        bot_mock.reply_to.assert_called_once_with(
+        _ = getprices_controller(
+            bot=bot_mock,
             message=message_mock,
+            logger=mock.MagicMock(),
+            wildberries_get_price=wildberries.get_price,
+        )
+
+        bot_mock.send_message.assert_called_once_with(
+            chat_id=message_mock.chat.id,
             text=(
                 'prices:\n----------------------\n'
                 'Product:\n - url: http://myurl1.ru\n - title: mytitle1\n - vendor: myvendor1\n - price: 999'
@@ -120,12 +128,18 @@ class TestController(unittest.TestCase):
 
         bot_mock = mock.MagicMock(name='bot_mock')
         message_mock = mock.MagicMock(name='message_mock')
+        message_mock.chat.return_value.id.return_value = mock.MagicMock(name='chat_id')
 
-        _ = getprices_controller(bot=bot_mock, message=message_mock, logger=mock.MagicMock())
-
-        bot_mock.reply_to.assert_called_once_with(
+        _ = getprices_controller(
+            bot=bot_mock,
             message=message_mock,
-            text='prices:\n----------------------',
+            logger=mock.MagicMock(),
+            wildberries_get_price=wildberries.get_price,
+        )
+
+        bot_mock.send_message.assert_called_once_with(
+            chat_id=message_mock.chat.id,
+            text='prices:\n----------------------\nnot found',
         )
     
     @mock.patch('provider.web.wildberries.get_price')
@@ -167,11 +181,17 @@ class TestController(unittest.TestCase):
 
         bot_mock = mock.MagicMock(name='bot_mock')
         message_mock = mock.MagicMock(name='message_mock')
+        message_mock.chat.return_value.id.return_value = mock.MagicMock(name='chat_id')
 
-        _ = getprices_controller(bot=bot_mock, message=message_mock, logger=mock.MagicMock())
-
-        bot_mock.reply_to.assert_called_once_with(
+        _ = getprices_controller(
+            bot=bot_mock,
             message=message_mock,
+            logger=mock.MagicMock(),
+            wildberries_get_price=wildberries.get_price,
+        )
+
+        bot_mock.send_message.assert_called_once_with(
+            chat_id=message_mock.chat.id,
             text=(
                 'prices:\n----------------------\n'
                 'Product:\n - url: http://myurl1.ru\n - title: mytitle1\n - vendor: myvendor1\n - price: 999'
@@ -210,11 +230,17 @@ class TestController(unittest.TestCase):
 
         bot_mock = mock.MagicMock(name='bot_mock')
         message_mock = mock.MagicMock(name='message_mock')
+        message_mock.chat.return_value.id.return_value = mock.MagicMock(name='chat_id')
 
-        _ = getprices_controller(bot=bot_mock, message=message_mock, logger=mock.MagicMock())
-
-        bot_mock.reply_to.assert_called_once_with(
+        _ = getprices_controller(
+            bot=bot_mock,
             message=message_mock,
+            logger=mock.MagicMock(),
+            wildberries_get_price=wildberries.get_price,
+        )
+
+        bot_mock.send_message.assert_called_once_with(
+            chat_id=message_mock.chat.id,
             text=(
                 'prices:\n----------------------\n'
                 'Product:\n - url: http://myurl1.ru\n - title: mytitle1\n - vendor: myvendor1\n - price: 999'
@@ -267,11 +293,12 @@ class TestController(unittest.TestCase):
         
         bot_mock = mock.MagicMock(name='bot_mock')
         message_mock = mock.MagicMock(name='message_mock')
+        message_mock.chat.return_value.id.return_value = mock.MagicMock(name='chat_id')
 
         _ = list_controller(bot=bot_mock, message=message_mock, logger=mock.MagicMock())
 
-        bot_mock.reply_to.assert_called_once_with(
-            message=message_mock,
+        bot_mock.send_message.assert_called_once_with(
+            chat_id=message_mock.chat.id,
             text=(
                 'products:\n----------------------\n'
                 'Product:\n - url: http://myurl1.ru\n - title: mytitle1\n - vendor: myvendor1'
@@ -318,11 +345,12 @@ class TestController(unittest.TestCase):
         
         bot_mock = mock.MagicMock(name='bot_mock')
         message_mock = mock.MagicMock(name='message_mock')
+        message_mock.chat.return_value.id.return_value = mock.MagicMock(name='chat_id')
 
         _ = list_controller(bot=bot_mock, message=message_mock, logger=mock.MagicMock())
 
-        bot_mock.reply_to.assert_called_once_with(
-            message=message_mock,
+        bot_mock.send_message.assert_called_once_with(
+            chat_id=message_mock.chat.id,
             text=(
                 'products:\n----------------------\n'
                 'Product:\n - url: http://myurl1.ru\n - title: mytitle1\n - vendor: myvendor1'
@@ -357,11 +385,12 @@ class TestController(unittest.TestCase):
         
         bot_mock = mock.MagicMock(name='bot_mock')
         message_mock = mock.MagicMock(name='message_mock')
+        message_mock.chat.return_value.id.return_value = mock.MagicMock(name='chat_id')
 
         _ = list_controller(bot=bot_mock, message=message_mock, logger=mock.MagicMock())
 
-        bot_mock.reply_to.assert_called_once_with(
-            message=message_mock,
+        bot_mock.send_message.assert_called_once_with(
+            chat_id=message_mock.chat.id,
             text=(
                 'products:\n----------------------\n'
                 'Product:\n - url: http://myurl1.ru\n - title: mytitle1\n - vendor: myvendor1'
@@ -383,11 +412,12 @@ class TestController(unittest.TestCase):
         
         bot_mock = mock.MagicMock(name='bot_mock')
         message_mock = mock.MagicMock(name='message_mock')
+        message_mock.chat.return_value.id.return_value = mock.MagicMock(name='chat_id')
 
         _ = list_controller(bot=bot_mock, message=message_mock, logger=mock.MagicMock())
 
-        bot_mock.reply_to.assert_called_once_with(
-            message=message_mock,
+        bot_mock.send_message.assert_called_once_with(
+            chat_id=message_mock.chat.id,
             text=(
                 'products:'
                 '\n----------------------\n'
